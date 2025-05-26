@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 
 # Copiar archivos de requisitos primero para aprovechar la caché de Docker
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt pydantic-settings
+RUN pip install -r requirements.txt pydantic-settings
 
 # Copiar el código de la aplicación
 COPY . .

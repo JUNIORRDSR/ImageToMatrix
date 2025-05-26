@@ -2,7 +2,7 @@
 Configuraciones de la aplicación.
 """
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Union
 from functools import lru_cache
 import os
 
@@ -15,12 +15,18 @@ class Settings(BaseSettings):
     
     # Límites y parámetros
     MAX_IMAGE_SIZE: int = 10 * 1024 * 1024  # 10MB
-    ALLOWED_EXTENSIONS: List[str] = ["jpg", "jpeg", "png", "bmp", "tiff"]
+    ALLOWED_EXTENSIONS: Union[str, List[str]] = "jpg,jpeg,png,bmp,tiff"
     MAX_WIDTH: int = 2048
     MAX_HEIGHT: int = 2048
-      # Seguridad
+    # Seguridad
     API_KEY_HEADER: str = "X-API-Key"
     DEFAULT_API_KEY: str = "development_key_change_me"
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Convertir ALLOWED_EXTENSIONS de string a lista si es necesario
+        if isinstance(self.ALLOWED_EXTENSIONS, str):
+            self.ALLOWED_EXTENSIONS = [ext.strip() for ext in self.ALLOWED_EXTENSIONS.split(',')]
     
     model_config = {
         "env_file": ".env",
